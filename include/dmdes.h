@@ -10,13 +10,6 @@
 #include <time.h>
 #include <dmtypes.h>
 
-
-/**
-* @defgroup groupcrypto 加解密操作
-* @ingroup  SGDP
-* @{
-*/
-
 /**
 * @brief DES enc/dec type macros
 * DES编码/解码宏
