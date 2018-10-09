@@ -1,26 +1,82 @@
-
-// Copyright (c) 2018 brinkqiang (brink.qiang@gmail.com)
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 #include "dmdes.h"
+#include "dmcryptodes.h"
 
-int DMAPI DMDES_MAIN( int argc, char* argv[] ){
-    return -1;
+void CDMDes::DESGenKey(DMESBlock* pIV)
+{
+    DESRandomKey(pIV);
 }
+
+void CDMDes::DESGenKey(DMDES3Block* pIV)
+{
+    GenDES3Key(pIV);
+}
+
+void CDMDes::DESGenEncKeySche(DMDESContext *pCtx, DMESBlock& oKey)
+{
+    DESSetEncKey(pCtx, oKey.acBlock);
+}
+
+void CDMDes::DESGenEncKeySche(DMDES3Context *pCtx, DMDES3Block& oKey)
+{
+    DES3SetEncKey(pCtx, &oKey);
+}
+
+
+void CDMDes::DESGenDecKeySche(DMDESContext *pCtx, DMESBlock& oKey)
+{
+    DESSetDecKey(pCtx, oKey.acBlock);
+}
+
+void CDMDes::DESGenDecKeySche(DMDES3Context *pCtx, DMDES3Block& oKey)
+{
+    DES3SetDecKey(pCtx, &oKey);
+}
+
+void CDMDes::DESEncryptNCBC(DMDESContext    *pCtx,
+    DMESBlock		 *pIV,
+    int32_t		 nLength,
+    unsigned char *pInput,
+    unsigned char *pOutput)
+{
+    DMESBlock IVBak;
+    memcpy(&IVBak, (const void*)pIV, sizeof(DMESBlock));
+    DESCryptCBC(pCtx, DES_ENCRYPT, nLength, pIV, pInput, pOutput);
+    memcpy(pIV, (const void*)&IVBak, sizeof(DMESBlock));
+}
+
+void CDMDes::DESEncryptNCBC(DMDES3Context   *pCtx,
+    DMDES3Block	 *pIV,
+    int32_t		 nLength,
+    unsigned char *pInput,
+    unsigned char *pOutput)
+{
+    DMDES3Block IVBak;
+    memcpy(&IVBak, (const void*)pIV, sizeof(DMDES3Block));
+    DES3CryptCBC(pCtx, DES_ENCRYPT, nLength, pIV, pInput, pOutput);
+    memcpy(pIV, (const void*)&IVBak, sizeof(DMDES3Block));
+}
+
+void CDMDes::DESDecryptNCBC(DMDESContext	 *pCtx,
+    DMESBlock		 *pIV,
+    int32_t		 nLength,
+    unsigned char *pInput,
+    unsigned char *pOutput)
+{
+    DMESBlock IVBak;
+    memcpy(&IVBak, (const void*)pIV, sizeof(DMESBlock));
+    DESCryptCBC(pCtx, DES_DECRYPT, nLength, pIV, pInput, pOutput);
+    memcpy(pIV, (const void*)&IVBak, sizeof(DMESBlock));
+}
+
+void CDMDes::DESDecryptNCBC(DMDES3Context	 *pCtx,
+    DMDES3Block	 *pIV,
+    int32_t		 nLength,
+    unsigned char *pInput,
+    unsigned char *pOutput)
+{
+    DMDES3Block IVBak;
+    memcpy(&IVBak, (const void*)pIV, sizeof(DMDES3Block));
+    DES3CryptCBC(pCtx, DES_DECRYPT, nLength, pIV, pInput, pOutput);
+    memcpy(pIV, (const void*)&IVBak, sizeof(DMDES3Block));
+}
+
